@@ -28,18 +28,8 @@ namespace kodah
     }
 
     glViewport(0, 0, width, height);
-  }
 
-  void Engine::run()
-  {
-    while (true)
-    {
-      window->update();
-      if (window->shouldClose())
-      {
-        break;
-      }
-    }
+    window->show();
   }
 
 }

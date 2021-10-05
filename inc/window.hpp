@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include "eventpp/callbacklist.h"
 
 namespace kodah
 {
@@ -8,17 +9,16 @@ namespace kodah
   {
    public:
 
+    eventpp::CallbackList<void()> onQuit;
+
     Window(const char *title, int width, int height);
     ~Window();
 
-    void pollEvent();
-
-    bool shouldClose();
-    void onQuit(); // make this an event; invoke when needed
+    void show() const;
 
    private:
     SDL_Window *window;
     SDL_GLContext context;
-    SDL_Event *event;
+
   };
 }

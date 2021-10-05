@@ -5,7 +5,7 @@
 
 namespace kodah
 {
-  Window::Window(const char *title, int width, int height)
+  Window::Window(const char *title, const int width, const int height)
   {
     window = SDL_CreateWindow(
         title,
@@ -19,11 +19,28 @@ namespace kodah
     }
 
     context = SDL_GL_CreateContext(window);
+
+
   }
 
   Window::~Window()
   {
     SDL_DestroyWindow(window);
+  }
+
+  void Window::show() const
+  {
+    SDL_Event event;
+    while (true)
+    {
+      while (SDL_PollEvent(&event))
+      {
+        if (event.type == SDL_QUIT)
+        {
+          break;
+        }
+      }
+    }
   }
 
 

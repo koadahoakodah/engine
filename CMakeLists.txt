@@ -14,7 +14,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
-    SDL2::SDL2
+    SDL2::SDL2 SDL2::SDL2main
     OpenGL::GL
     GLEW::GLEW)
 
