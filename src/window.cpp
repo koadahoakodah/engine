@@ -1,4 +1,5 @@
 #include "window.hpp"
+#include "eventpp/eventdispatcher.h"
 
 #include <stdexcept>
 

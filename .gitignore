@@ -3,3 +3,6 @@ build/
 cmake-build-debug/
 tmp/
 .idea/
+.vs/
+
+CMakeSettings.json
