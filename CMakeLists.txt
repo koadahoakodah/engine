@@ -20,4 +20,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/inc
-    ${PROJECT_SOURCE_DIR}/lib/eventpp/include)
+    ${PROJECT_SOURCE_DIR}/lib/eventpp/include
+    ${PROJECT_SOURCE_DIR}/lib/glm)

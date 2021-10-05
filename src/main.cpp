@@ -8,6 +8,7 @@ int main()
   {
     kodah::Engine engine{};
     engine.createWindow("New Window", 800, 600);
+    engine.initData();
     engine.run();
   }
   catch (std::runtime_error &error)
