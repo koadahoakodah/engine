@@ -15,8 +15,8 @@ namespace kodah
     Window(const char *title, int width, int height);
     ~Window();
 
-    int width() const;
-    int height() const;
+    [[nodiscard]] int width() const;
+    [[nodiscard]] int height() const;
 
     void pollEvents() const;
     void swapBuffers() const;

@@ -4,10 +4,10 @@ namespace kodah
 {
   const char *vertexShaderSource =
       "#version 330 core\n"
-      "layout (location = 0) in vec3 pos;\n"
+      "layout (location = 0) in vec3 aPos;\n"
       "void main()\n"
       "{\n"
-      "  gl_Position = vec4(pos.xyz, 1.0);\n"
+      "  gl_Position = vec4(aPos.xyz, 1.0);\n"
       "}\0";
 
   const char *fragmentShaderSource =

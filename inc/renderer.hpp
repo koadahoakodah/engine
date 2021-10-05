@@ -30,7 +30,8 @@ namespace kodah
     void initShaders();
     [[nodiscard]] unsigned int createVertexShader() const;
     [[nodiscard]] unsigned int createFragmentShader() const;
-    unsigned int createShaderProgram(unsigned int vertexShader, unsigned int fragmentShader) const;
+    [[nodiscard]] unsigned int createShaderProgram(
+        unsigned int vertexShader, unsigned int fragmentShader) const;
 
   };
 }

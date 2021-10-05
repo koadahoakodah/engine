@@ -6,6 +6,46 @@
 
 namespace kodah
 {
+  namespace
+  {
+    void checkShaderCompileErrors(unsigned int shader)
+    {
+      int successful;
+      glGetShaderiv(shader, GL_COMPILE_STATUS, &successful);
+
+      if (!successful)
+      {
+        int infoLogLength;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        char infoLog[infoLogLength];
+        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
+
+        std::cerr << infoLog << std::endl;
+        throw std::runtime_error("Failed to compile shader!");
+      }
+    }
+
+    void checkProgramLinkErrors(unsigned int program)
+    {
+      int successful;
+      glGetProgramiv(program, GL_LINK_STATUS, &successful);
+
+      if (!successful)
+      {
+        int infoLogLength;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        char infoLog[infoLogLength];
+        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog);
+
+        std::cerr << infoLog << std::endl;
+        throw std::runtime_error("Failed to link program!");
+      }
+
+    }
+  }
+
   Renderer::Renderer(Window *window)
     : _window(window)
   {
@@ -58,19 +98,7 @@ namespace kodah
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
     glCompileShader(vertexShader);
-
-    { // Error checking
-      int successful;
-      char infoLog[512];
-      glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &successful);
-      if (!successful)
-      {
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cerr << infoLog << std::endl;
-        throw std::runtime_error("Failed to compile vertex shader!");
-      }
-    }
-
+    checkShaderCompileErrors(vertexShader);
     return vertexShader;
   }
 
@@ -79,19 +107,7 @@ namespace kodah
     unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
     glCompileShader(fragmentShader);
-
-    { // Error checking
-      int successful;
-      char infoLog[512];
-      glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &successful);
-      if (!successful)
-      {
-        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-        std::cerr << infoLog << std::endl;
-        throw std::runtime_error("Failed to compile fragment shader!");
-      }
-    }
-
+    checkShaderCompileErrors(fragmentShader);
     return fragmentShader;
   }
 
@@ -99,21 +115,10 @@ namespace kodah
       unsigned int vertexShader, unsigned int fragmentShader) const
   {
     unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(_shaderProgram, vertexShader);
-    glAttachShader(_shaderProgram, fragmentShader);
-    glLinkProgram(_shaderProgram);
-
-    { // Error checking
-      int successful;
-      char infoLog[512];
-      glGetProgramiv(_shaderProgram, GL_LINK_STATUS, &successful);
-      if (!successful)
-      {
-        glGetProgramInfoLog(_shaderProgram, 512, nullptr, infoLog);
-        std::cerr << infoLog << std::endl;
-        throw std::runtime_error("Failed to link shader program!");
-      }
-    }
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+    checkProgramLinkErrors(shaderProgram);
 
     glUseProgram(shaderProgram);
 
