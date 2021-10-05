@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "window.hpp"
+#include "renderer.hpp"
 
 namespace kodah
 {
@@ -15,9 +16,12 @@ namespace kodah
     ~Engine();
 
     void createWindow(const char *title, int width, int height);
+    void run();
 
    private:
 
-    std::unique_ptr<Window> window;
+    std::shared_ptr<Window> _window;
+    std::unique_ptr<Renderer> _renderer;
+    bool _shouldQuit = false;
   };
 }

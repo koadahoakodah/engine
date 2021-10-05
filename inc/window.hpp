@@ -1,5 +1,6 @@
 #pragma once
 
+#define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include "eventpp/callbacklist.h"
 
@@ -14,11 +15,18 @@ namespace kodah
     Window(const char *title, int width, int height);
     ~Window();
 
-    void show() const;
+    int width() const;
+    int height() const;
+
+    void pollEvents() const;
+    void swapBuffers() const;
 
    private:
-    SDL_Window *window;
-    SDL_GLContext context;
+    SDL_Window *_window;
+    SDL_GLContext _context;
+
+    int _width;
+    int _height;
 
   };
 }
