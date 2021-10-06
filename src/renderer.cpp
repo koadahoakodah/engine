@@ -93,7 +93,7 @@ namespace kodah
     _shaderProgram = createShaderProgram(vertexShader, fragmentShader);
   }
 
-  unsigned int Renderer::createVertexShader() const
+  unsigned int Renderer::createVertexShader()
   {
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
@@ -102,7 +102,7 @@ namespace kodah
     return vertexShader;
   }
 
-  unsigned int Renderer::createFragmentShader() const
+  unsigned int Renderer::createFragmentShader()
   {
     unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
@@ -112,7 +112,7 @@ namespace kodah
   }
 
   unsigned int Renderer::createShaderProgram(
-      unsigned int vertexShader, unsigned int fragmentShader) const
+      unsigned int vertexShader, unsigned int fragmentShader)
   {
     unsigned int shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
@@ -120,11 +120,15 @@ namespace kodah
     glLinkProgram(shaderProgram);
     checkProgramLinkErrors(shaderProgram);
 
-    glUseProgram(shaderProgram);
-
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
     return shaderProgram;
+  }
+
+  void Renderer::TEMP()
+  {
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
   }
 }

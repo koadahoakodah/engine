@@ -19,6 +19,8 @@ namespace kodah
     void updateVertices();
     void addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
 
+    void TEMP();
+
    private:
 
     Window *_window;
@@ -28,10 +30,10 @@ namespace kodah
     unsigned int _shaderProgram = 0;
 
     void initShaders();
-    [[nodiscard]] unsigned int createVertexShader() const;
-    [[nodiscard]] unsigned int createFragmentShader() const;
-    [[nodiscard]] unsigned int createShaderProgram(
-        unsigned int vertexShader, unsigned int fragmentShader) const;
+    [[nodiscard]] static unsigned int createVertexShader();
+    [[nodiscard]] static unsigned int createFragmentShader();
+    [[nodiscard]] static unsigned int createShaderProgram(
+        unsigned int vertexShader, unsigned int fragmentShader);
 
   };
 }
