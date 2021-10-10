@@ -56,16 +56,23 @@ namespace kodah
       throw std::runtime_error("Failed to initialize GLEW!");
     }
 
-    glViewport(0, 0, window->getWidth(), window->getHeight());
+    glViewport(0, 0, this->window->getWidth(), this->window->getHeight());
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ebo);
 
     initShaders();
 
   }
 
-  Renderer::~Renderer() = default;
+  Renderer::~Renderer()
+  {
+    glDeleteVertexArrays(1, &vao);
+    glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &ebo);
+    glDeleteProgram(shaderProgram);
+  }
 
   void Renderer::render() const
   {
@@ -74,7 +81,9 @@ namespace kodah
 
     glUseProgram(shaderProgram);
     glBindVertexArray(vao);
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size()));
+    //glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size()));
+    //glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
   }
 
   void Renderer::updateVertices() const
@@ -82,10 +91,15 @@ namespace kodah
     // Bind the vertex array object
     glBindVertexArray(vao);
 
-    // Copy the array of vertices into a buffer for OpenGL to use
+    // Copy data from array of vertices into vertex buffer object
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     int bufferSize = static_cast<int>(vertices.size() * sizeof(vertices[0]));
     glBufferData(GL_ARRAY_BUFFER, bufferSize, &vertices[0], GL_STATIC_DRAW);
+
+    // Update element buffer object
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    bufferSize = static_cast<int>(indices.size() * sizeof(indices[0]));
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, bufferSize, indices.data(), GL_STATIC_DRAW);
 
     // Update vertex attributes pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
@@ -97,11 +111,16 @@ namespace kodah
 
   void Renderer::addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
   {
+    auto i = static_cast<unsigned int>(vertices.size());
+
     vertices.push_back(v1);
     vertices.push_back(v2);
     vertices.push_back(v3);
 
     // update indices here (change it later for strip mesh)
+    indices.push_back(i);
+    indices.push_back(i + 1);
+    indices.push_back(i + 2);
 
     updateVertices();
   }

@@ -27,7 +27,6 @@ namespace kodah
     std::vector<unsigned int> indices;
 
     unsigned int vao = 0;
-
     unsigned int vbo = 0;
     unsigned int ebo = 0;
 
