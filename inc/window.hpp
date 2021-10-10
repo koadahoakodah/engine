@@ -15,18 +15,18 @@ namespace kodah
     Window(const char *title, int width, int height);
     ~Window();
 
-    [[nodiscard]] int width() const;
-    [[nodiscard]] int height() const;
+    [[nodiscard]] int getWidth() const;
+    [[nodiscard]] int getHeight() const;
 
     void pollEvents() const;
     void swapBuffers() const;
 
    private:
-    SDL_Window *_window;
-    SDL_GLContext _context;
+    SDL_Window *window;
+    SDL_GLContext context;
 
-    int _width;
-    int _height;
+    int width;
+    int height;
 
   };
 }

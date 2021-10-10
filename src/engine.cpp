@@ -8,29 +8,32 @@ namespace kodah
 
   void Engine::createWindow(const char *title, int width, int height)
   {
-    _window = std::make_unique<Window>(title, width, height);
-    _renderer = std::make_unique<Renderer>(_window.get());
+    window = std::make_unique<Window>(title, width, height);
+    renderer = std::make_unique<Renderer>(window.get());
 
-    _window->onQuit.append([this]() { this->_shouldQuit = true; });
+    shouldQuit = false;
+    window->onQuit.append([this]() { this->shouldQuit = true; });
+
+    init();
   }
 
-  void Engine::initData()
+  void Engine::init()
   {
-    _renderer->addTriangle(
+    renderer->addTriangle(
         glm::vec3(-0.5f, -0.5f, 0.0f),
         glm::vec3(0.5f, -0.5f, 0.0f),
         glm::vec3(0.0f, 0.5f, 0.0f));
 
-    _renderer->TEMP();
+    renderer->TEMP();
   }
 
-  void Engine::run()
+  void Engine::run() const
   {
-    while (!_shouldQuit)
+    while (!shouldQuit)
     {
-      _window->pollEvents();
-      _renderer->render();
-      _window->swapBuffers();
+      window->pollEvents();
+      renderer->render();
+      window->swapBuffers();
     }
   }
 }

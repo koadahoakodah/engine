@@ -47,7 +47,7 @@ namespace kodah
   }
 
   Renderer::Renderer(Window *window)
-    : _window(window)
+    : window(window)
   {
     glewExperimental = GL_TRUE;
 
@@ -56,10 +56,10 @@ namespace kodah
       throw std::runtime_error("Failed to initialize GLEW!");
     }
 
-    glViewport(0, 0, _window->width(), _window->height());
+    glViewport(0, 0, window->getWidth(), window->getHeight());
 
-    glGenVertexArrays(1, &_defaultVAO);
-    glGenBuffers(1, &_verticesVBO);
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
 
     initShaders();
 
@@ -72,20 +72,20 @@ namespace kodah
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(_shaderProgram);
-    glBindVertexArray(_defaultVAO);
-    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(_vertices.size()));
+    glUseProgram(shaderProgram);
+    glBindVertexArray(vao);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size()));
   }
 
   void Renderer::updateVertices() const
   {
     // Bind the vertex array object
-    glBindVertexArray(_defaultVAO);
+    glBindVertexArray(vao);
 
     // Copy the array of vertices into a buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, _verticesVBO);
-    int bufferSize = static_cast<int>(_vertices.size() * sizeof(_vertices[0]));
-    glBufferData(GL_ARRAY_BUFFER, bufferSize, &_vertices[0], GL_STATIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    int bufferSize = static_cast<int>(vertices.size() * sizeof(vertices[0]));
+    glBufferData(GL_ARRAY_BUFFER, bufferSize, &vertices[0], GL_STATIC_DRAW);
 
     // Update vertex attributes pointers
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
@@ -97,9 +97,11 @@ namespace kodah
 
   void Renderer::addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
   {
-    _vertices.push_back(v1);
-    _vertices.push_back(v2);
-    _vertices.push_back(v3);
+    vertices.push_back(v1);
+    vertices.push_back(v2);
+    vertices.push_back(v3);
+
+    // update indices here (change it later for strip mesh)
 
     updateVertices();
   }
@@ -108,7 +110,7 @@ namespace kodah
   {
     unsigned int vertexShader = createVertexShader();
     unsigned int fragmentShader = createFragmentShader();
-    _shaderProgram = createShaderProgram(vertexShader, fragmentShader);
+    shaderProgram = createShaderProgram(vertexShader, fragmentShader);
   }
 
   unsigned int Renderer::createVertexShader()

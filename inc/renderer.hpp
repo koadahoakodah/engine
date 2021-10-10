@@ -22,12 +22,16 @@ namespace kodah
 
    private:
 
-    Window *_window;
-    std::vector<glm::vec3> _vertices;
+    Window *window;
+    std::vector<glm::vec3> vertices;
+    std::vector<unsigned int> indices;
 
-    unsigned int _defaultVAO = 0;
-    unsigned int _verticesVBO = 0;
-    unsigned int _shaderProgram = 0;
+    unsigned int vao = 0;
+
+    unsigned int vbo = 0;
+    unsigned int ebo = 0;
+
+    unsigned int shaderProgram = 0;
 
     void initShaders();
     [[nodiscard]] static unsigned int createVertexShader();

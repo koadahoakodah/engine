@@ -5,7 +5,7 @@
 namespace kodah
 {
   Window::Window(const char *title, const int width, const int height)
-    : _width(width), _height(height)
+    : width(width), height(height)
   {
     SDL_SetMainReady();
     SDL_Init(SDL_INIT_VIDEO);
@@ -14,34 +14,34 @@ namespace kodah
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-    _window = SDL_CreateWindow(
+    window = SDL_CreateWindow(
         title,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-        _width, _height,
+        width, height,
         SDL_WINDOW_OPENGL);
 
-    if (!_window)
+    if (!window)
     {
       throw std::runtime_error("Failed to create SDL window!");
     }
 
-    _context = SDL_GL_CreateContext(_window);
+    context = SDL_GL_CreateContext(window);
   }
 
   Window::~Window()
   {
-    SDL_DestroyWindow(_window);
+    SDL_DestroyWindow(window);
     SDL_Quit();
   }
 
-  int Window::width() const
+  int Window::getWidth() const
   {
-    return _width;
+    return width;
   }
 
-  int Window::height() const
+  int Window::getHeight() const
   {
-    return _height;
+    return height;
   }
 
   void Window::pollEvents() const
@@ -60,7 +60,7 @@ namespace kodah
 
   void Window::swapBuffers() const
   {
-    SDL_GL_SwapWindow(_window);
+    SDL_GL_SwapWindow(window);
   }
 
 

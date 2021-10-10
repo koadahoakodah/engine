@@ -16,14 +16,14 @@ namespace kodah
     ~Engine();
 
     void createWindow(const char *title, int width, int height);
-    void initData();
-    void run();
-
+    void run() const;
 
    private:
 
-    std::shared_ptr<Window> _window;
-    std::unique_ptr<Renderer> _renderer;
-    bool _shouldQuit = false;
+    std::shared_ptr<Window> window;
+    std::unique_ptr<Renderer> renderer;
+    bool shouldQuit = true;
+
+    void init();
   };
 }
