@@ -18,10 +18,10 @@ namespace kodah
         int infoLogLength;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        char infoLog[infoLogLength];
-        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog);
+        std::vector<char> infoLog(infoLogLength);
+        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog.data());
 
-        std::cerr << infoLog << std::endl;
+        std::cerr << infoLog.data() << std::endl;
         throw std::runtime_error("Failed to compile shader!");
       }
     }
@@ -36,10 +36,10 @@ namespace kodah
         int infoLogLength;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        char infoLog[infoLogLength];
-        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog);
+        std::vector<char> infoLog(infoLogLength);
+        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog.data());
 
-        std::cerr << infoLog << std::endl;
+        std::cerr << infoLog.data() << std::endl;
         throw std::runtime_error("Failed to link program!");
       }
 
@@ -58,6 +58,7 @@ namespace kodah
 
     glViewport(0, 0, _window->width(), _window->height());
 
+    glGenVertexArrays(1, &_defaultVAO);
     glGenBuffers(1, &_verticesVBO);
 
     initShaders();
@@ -70,13 +71,28 @@ namespace kodah
   {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
+    glUseProgram(_shaderProgram);
+    glBindVertexArray(_defaultVAO);
+    glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(_vertices.size()));
   }
 
-  void Renderer::updateVertices()
+  void Renderer::updateVertices() const
   {
+    // Bind the vertex array object
+    glBindVertexArray(_defaultVAO);
+
+    // Copy the array of vertices into a buffer for OpenGL to use
     glBindBuffer(GL_ARRAY_BUFFER, _verticesVBO);
     int bufferSize = static_cast<int>(_vertices.size() * sizeof(_vertices[0]));
     glBufferData(GL_ARRAY_BUFFER, bufferSize, &_vertices[0], GL_STATIC_DRAW);
+
+    // Update vertex attributes pointers
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+    glEnableVertexAttribArray(0);
+
+    // Unbind the vertex array object
+    glBindVertexArray(0);
   }
 
   void Renderer::addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
@@ -84,6 +100,8 @@ namespace kodah
     _vertices.push_back(v1);
     _vertices.push_back(v2);
     _vertices.push_back(v3);
+
+    updateVertices();
   }
 
   void Renderer::initShaders()
@@ -126,9 +144,8 @@ namespace kodah
     return shaderProgram;
   }
 
+  // use this method for testing
   void Renderer::TEMP()
   {
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-    glEnableVertexAttribArray(0);
   }
 }

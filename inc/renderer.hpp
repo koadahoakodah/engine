@@ -16,7 +16,6 @@ namespace kodah
 
     void render() const;
 
-    void updateVertices();
     void addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
 
     void TEMP();
@@ -26,6 +25,7 @@ namespace kodah
     Window *_window;
     std::vector<glm::vec3> _vertices;
 
+    unsigned int _defaultVAO = 0;
     unsigned int _verticesVBO = 0;
     unsigned int _shaderProgram = 0;
 
@@ -34,6 +34,8 @@ namespace kodah
     [[nodiscard]] static unsigned int createFragmentShader();
     [[nodiscard]] static unsigned int createShaderProgram(
         unsigned int vertexShader, unsigned int fragmentShader);
+
+    void updateVertices() const;
 
   };
 }
