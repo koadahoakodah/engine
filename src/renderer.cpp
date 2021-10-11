@@ -100,6 +100,21 @@ namespace kodah
     glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
   }
 
+  void Renderer::addVertex(const glm::vec3 vertex)
+  {
+    int i = findVec3(vertex, vertices);
+
+    if (i != -1)
+    {
+      indices.push_back(i);
+    }
+    else
+    {
+      indices.push_back(vertices.size());
+      vertices.push_back(vertex);
+    }
+  }
+
   void Renderer::updateVertices() const
   {
     // Bind the vertex array object
@@ -125,37 +140,9 @@ namespace kodah
 
   void Renderer::addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
   {
-    int i;
-
-    if ((i = findVec3(v1, vertices)) != -1)
-    {
-      indices.push_back(i);
-    }
-    else
-    {
-      indices.push_back(vertices.size());
-      vertices.push_back(v1);
-    }
-
-    if ((i = findVec3(v2, vertices)) != -1)
-    {
-      indices.push_back(i);
-    }
-    else
-    {
-      indices.push_back(vertices.size());
-      vertices.push_back(v2);
-    }
-
-    if ((i = findVec3(v3, vertices)) != -1)
-    {
-      indices.push_back(i);
-    }
-    else
-    {
-      indices.push_back(vertices.size());
-      vertices.push_back(v3);
-    }
+    addVertex(v1);
+    addVertex(v2);
+    addVertex(v3);
 
     updateVertices();
 

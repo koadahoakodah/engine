@@ -38,6 +38,7 @@ namespace kodah
     [[nodiscard]] static unsigned int createShaderProgram(
         unsigned int vertexShader, unsigned int fragmentShader);
 
+    void addVertex(glm::vec3);
     void updateVertices() const;
 
   };
