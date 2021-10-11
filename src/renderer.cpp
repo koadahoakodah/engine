@@ -44,6 +44,21 @@ namespace kodah
       }
 
     }
+
+    // Find a vec3 in a collection of vec3's
+    // If found, return the matching index; Else, return -1
+    int findVec3(glm::vec3 needle, const std::vector<glm::vec3> &haystack)
+    {
+      for (int i = 0; i < haystack.size(); i++)
+      {
+        if (haystack[i] == needle)
+        {
+          return i;
+        }
+      }
+
+      return -1;
+    }
   }
 
   Renderer::Renderer(Window *window)
@@ -82,8 +97,7 @@ namespace kodah
     glUseProgram(shaderProgram);
     glBindVertexArray(vao);
     //glDrawArrays(GL_TRIANGLES, 0, static_cast<int>(vertices.size()));
-    //glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
   }
 
   void Renderer::updateVertices() const
@@ -111,18 +125,42 @@ namespace kodah
 
   void Renderer::addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3)
   {
-    auto i = static_cast<unsigned int>(vertices.size());
+    int i;
 
-    vertices.push_back(v1);
-    vertices.push_back(v2);
-    vertices.push_back(v3);
+    if ((i = findVec3(v1, vertices)) != -1)
+    {
+      indices.push_back(i);
+    }
+    else
+    {
+      indices.push_back(vertices.size());
+      vertices.push_back(v1);
+    }
 
-    // update indices here (change it later for strip mesh)
-    indices.push_back(i);
-    indices.push_back(i + 1);
-    indices.push_back(i + 2);
+    if ((i = findVec3(v2, vertices)) != -1)
+    {
+      indices.push_back(i);
+    }
+    else
+    {
+      indices.push_back(vertices.size());
+      vertices.push_back(v2);
+    }
+
+    if ((i = findVec3(v3, vertices)) != -1)
+    {
+      indices.push_back(i);
+    }
+    else
+    {
+      indices.push_back(vertices.size());
+      vertices.push_back(v3);
+    }
 
     updateVertices();
+
+    std::cout << "indices: " << indices.size() << std::endl;
+    std::cout << "vertices: " << vertices.size() << std::endl;
   }
 
   void Renderer::initShaders()
