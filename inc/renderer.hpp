@@ -16,7 +16,9 @@ namespace kodah
 
     void render() const;
 
-    void addTriangle(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3);
+    void addTriangle(
+        glm::vec3 v1, glm::vec3 v2, glm::vec3 v3,
+        glm::vec3 c1, glm::vec3 c2, glm::vec3 c3);
 
     void TEMP();
 
@@ -24,10 +26,12 @@ namespace kodah
 
     Window *window;
     std::vector<glm::vec3> vertices;
+    std::vector<glm::vec3> colors;
     std::vector<unsigned int> indices;
 
     unsigned int vao = 0;
-    unsigned int vbo = 0;
+    unsigned int vboVertices = 0;
+    unsigned int vboColors = 0;
     unsigned int ebo = 0;
 
     unsigned int shaderProgram = 0;
@@ -38,7 +42,7 @@ namespace kodah
     [[nodiscard]] static unsigned int createShaderProgram(
         unsigned int vertexShader, unsigned int fragmentShader);
 
-    void addVertex(glm::vec3);
+    void addVertex(glm::vec3 vertex, glm::vec3 color);
     void updateVertices() const;
 
   };

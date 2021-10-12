@@ -4,5 +4,7 @@ cmake-build-debug/
 tmp/
 .idea/
 .vs/
+.cache/
 
 CMakeSettings.json
+.DS_Store

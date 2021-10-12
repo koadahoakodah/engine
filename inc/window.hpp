@@ -15,6 +15,8 @@ namespace kodah
     Window(const char *title, int width, int height);
     ~Window();
 
+    static unsigned int getTime();
+
     [[nodiscard]] int getWidth() const;
     [[nodiscard]] int getHeight() const;
 

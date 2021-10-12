@@ -63,6 +63,10 @@ namespace kodah
     SDL_GL_SwapWindow(window);
   }
 
+  unsigned int Window::getTime()
+  {
+    return SDL_GetTicks();
+  }
 
 
 }
