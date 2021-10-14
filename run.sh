@@ -1,0 +1,1 @@
+bin/engine './src/shaders/example.vert' './src/shaders/example.frag'

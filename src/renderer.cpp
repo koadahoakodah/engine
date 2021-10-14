@@ -167,6 +167,11 @@ namespace kodah
 
   }
 
+  void Renderer::addShader(const char *vertexPath, const char *fragmentPath)
+  {
+    shaders.emplace_back(vertexPath, fragmentPath);
+  }
+
   void Renderer::initShaders()
   {
     unsigned int vertexShader = createVertexShader();
@@ -211,4 +216,5 @@ namespace kodah
   void Renderer::TEMP()
   {
   }
+
 }

@@ -13,31 +13,20 @@ namespace kodah
 
     shouldQuit = false;
     window->onQuit.append([this]() { this->shouldQuit = true; });
-
-    init();
   }
 
-  void Engine::init()
+  void Engine::addShader(const char *vertexPath, const char *fragmentPath)
   {
-    renderer->addTriangle(
-        glm::vec3(0.5f, 0.5f, 0.0f),
-        glm::vec3(0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f, 0.5f, 0.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 1.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f));
-
-    renderer->addTriangle(
-        glm::vec3(0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f, -0.5f, 0.0f),
-        glm::vec3(-0.5f, 0.5f, 0.0f),
-        glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec3(0.0f, 0.0f, 1.0f));
-
-
-    renderer->TEMP();
+    renderer->addShader(vertexPath, fragmentPath);
   }
+
+  void Engine::addTriangle(
+      glm::vec3 v1, glm::vec3 v2, glm::vec3 v3,
+      glm::vec3 c1, glm::vec3 c2, glm::vec3 c3)
+  {
+    renderer->addTriangle(v1, v2, v3, c1, c2, c3);
+  }
+
 
   void Engine::run() const
   {
