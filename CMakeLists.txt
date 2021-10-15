@@ -10,6 +10,7 @@ set(SOURCE_FILES
     ${PROJECT_SOURCE_DIR}/src/main.cpp
     ${PROJECT_SOURCE_DIR}/src/renderer.cpp
     ${PROJECT_SOURCE_DIR}/src/shader.cpp
+    ${PROJECT_SOURCE_DIR}/src/texture.cpp
     ${PROJECT_SOURCE_DIR}/src/window.cpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
@@ -30,5 +31,6 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 target_include_directories(${PROJECT_NAME} PUBLIC
     ${PROJECT_SOURCE_DIR}/inc
     ${PROJECT_SOURCE_DIR}/lib/eventpp/include
-    ${PROJECT_SOURCE_DIR}/lib/glm)
+    ${PROJECT_SOURCE_DIR}/lib/glm
+    ${PROJECT_SOURCE_DIR}/lib/stb)
 

@@ -5,6 +5,7 @@ tmp/
 .idea/
 .vs/
 .cache/
+.vscode/
 
 CMakeSettings.json
 .DS_Store
