@@ -5,6 +5,9 @@
 #include <iostream>
 #include <fmt/core.h>
 
+#include <GL/glew.h>
+#include <vector>
+
 namespace kodah
 {
   namespace
@@ -24,46 +27,118 @@ namespace kodah
       return stream.str();
     }
 
-    void compileShader(const char *sourceCode)
+    void checkShaderCompileErrors(unsigned int shader)
     {
+      int successful;
+      glGetShaderiv(shader, GL_COMPILE_STATUS, &successful);
 
+      if (!successful)
+      {
+        int infoLogLength;
+        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        std::vector<char> infoLog(infoLogLength);
+        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog.data());
+
+        std::cerr << infoLog.data() << std::endl;
+        throw std::runtime_error("Failed to compile shader!");
+      }
+    }
+
+    void checkProgramLinkErrors(unsigned int program)
+    {
+      int successful;
+      glGetProgramiv(program, GL_LINK_STATUS, &successful);
+
+      if (!successful)
+      {
+        int infoLogLength;
+        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
+
+        std::vector<char> infoLog(infoLogLength);
+        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog.data());
+
+        std::cerr << infoLog.data() << std::endl;
+        throw std::runtime_error("Failed to link program!");
+      }
+
+    }
+
+    unsigned int createVertexShader(const char *sourceCode)
+    {
+      unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
+      glShaderSource(vertexShader, 1, &sourceCode, nullptr);
+      glCompileShader(vertexShader);
+      checkShaderCompileErrors(vertexShader);
+      return vertexShader;
+    }
+
+    unsigned int createFragmentShader(const char *sourceCode)
+    {
+      unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+      glShaderSource(fragmentShader, 1, &sourceCode, nullptr);
+      glCompileShader(fragmentShader);
+      checkShaderCompileErrors(fragmentShader);
+      return fragmentShader;
+    }
+
+    unsigned int createShaderProgram(unsigned int vertexShader, unsigned int fragmentShader)
+    {
+      unsigned int shaderProgram = glCreateProgram();
+      glAttachShader(shaderProgram, vertexShader);
+      glAttachShader(shaderProgram, fragmentShader);
+      glLinkProgram(shaderProgram);
+      checkProgramLinkErrors(shaderProgram);
+
+      glDeleteShader(vertexShader);
+      glDeleteShader(fragmentShader);
+
+      return shaderProgram;
     }
   }
 
   Shader::Shader(const char *vertexPath, const char *fragmentPath)
   {
-    std::string vertexCode = readFile(vertexPath);
-    std::cout << vertexCode << std::endl;
-    std::cout << vertexCode.length() << std::endl;
-    //const char *fragmentCode = readFile(fragmentPath);
-
-
-    id = -1;
+    std::string vertexSource = readFile(vertexPath);
+    std::string fragmentSource = readFile(fragmentPath);
+    unsigned int vertexShader = createVertexShader(vertexSource .c_str());
+    unsigned int fragmentShader = createFragmentShader(fragmentSource .c_str());
+    id = createShaderProgram(vertexShader, fragmentShader);
   }
 
-  void Shader::use()
+  Shader::~Shader()
   {
-
+    glDeleteProgram(id);
   }
 
-  unsigned int Shader::getId()
+  void Shader::use() const
+  {
+    glUseProgram(id);
+  }
+
+  unsigned int Shader::getId() const
   {
     return id;
   }
 
   void Shader::setUniform(const char *name, bool value) const
   {
-
+    glUniform1i(glGetUniformLocation(id, name), (int)value);
   }
 
   void Shader::setUniform(const char *name, int value) const
   {
-
+    glUniform1i(glGetUniformLocation(id, name), value);
   }
 
   void Shader::setUniform(const char *name, float value) const
   {
+    glUniform1f(glGetUniformLocation(id, name), value);
+  }
 
+  void Shader::setUniform(const char *name, float x, float y, float z, float w) const
+  {
+    glUniform4f(glGetUniformLocation(id, name), x, y, z, w);
   }
 
 }

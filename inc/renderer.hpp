@@ -39,15 +39,6 @@ namespace kodah
     unsigned int vboColors = 0;
     unsigned int ebo = 0;
 
-    unsigned int shaderProgram = 0;
-
-    void initShaders();
-    [[nodiscard]] static unsigned int createVertexShader();
-    [[nodiscard]] static unsigned int createFragmentShader();
-    [[nodiscard]] static unsigned int createShaderProgram(
-        unsigned int vertexShader, unsigned int fragmentShader);
-
-
     void addVertex(glm::vec3 vertex, glm::vec3 color);
     void updateVertices() const;
 

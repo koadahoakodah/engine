@@ -8,43 +8,6 @@ namespace kodah
 {
   namespace
   {
-    void checkShaderCompileErrors(unsigned int shader)
-    {
-      int successful;
-      glGetShaderiv(shader, GL_COMPILE_STATUS, &successful);
-
-      if (!successful)
-      {
-        int infoLogLength;
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        std::vector<char> infoLog(infoLogLength);
-        glGetShaderInfoLog(shader, infoLogLength, nullptr, infoLog.data());
-
-        std::cerr << infoLog.data() << std::endl;
-        throw std::runtime_error("Failed to compile shader!");
-      }
-    }
-
-    void checkProgramLinkErrors(unsigned int program)
-    {
-      int successful;
-      glGetProgramiv(program, GL_LINK_STATUS, &successful);
-
-      if (!successful)
-      {
-        int infoLogLength;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &infoLogLength);
-
-        std::vector<char> infoLog(infoLogLength);
-        glGetProgramInfoLog(program, infoLogLength, nullptr, infoLog.data());
-
-        std::cerr << infoLog.data() << std::endl;
-        throw std::runtime_error("Failed to link program!");
-      }
-
-    }
-
     // Find a vec3 in a collection of vec3's
     // If found, return the matching index; Else, return -1
     int findVec3(glm::vec3 needle, const std::vector<glm::vec3> &haystack)
@@ -78,8 +41,6 @@ namespace kodah
     glGenBuffers(1, &vboColors);
     glGenBuffers(1, &ebo);
 
-    initShaders();
-
   }
 
   Renderer::~Renderer()
@@ -88,7 +49,6 @@ namespace kodah
     glDeleteBuffers(1, &vboVertices);
     glDeleteBuffers(1, &vboColors);
     glDeleteBuffers(1, &ebo);
-    glDeleteProgram(shaderProgram);
   }
 
   void Renderer::render() const
@@ -96,15 +56,16 @@ namespace kodah
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    glUseProgram(shaderProgram);
+    auto shader = shaders[0];
+
+    shader.use();
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, static_cast<int>(indices.size()), GL_UNSIGNED_INT, nullptr);
 
-    // TEMPORARY
+    // UNIFORMS
     float timeValue = Window::getTime();
     float greenValue = sin(timeValue * 0.001f) / 2.0f + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-    glUniform4f(vertexColorLocation, 1.0f / greenValue * 0.5f, greenValue, 1.0f / greenValue, 1.0f);
+    shader.setUniform("ourColor", 1.0f / greenValue * 0.5f, greenValue, 1.0f / greenValue, 1.0f);
   }
 
   void Renderer::addVertex(const glm::vec3 vertex, const glm::vec3 color)
@@ -170,46 +131,6 @@ namespace kodah
   void Renderer::addShader(const char *vertexPath, const char *fragmentPath)
   {
     shaders.emplace_back(vertexPath, fragmentPath);
-  }
-
-  void Renderer::initShaders()
-  {
-    unsigned int vertexShader = createVertexShader();
-    unsigned int fragmentShader = createFragmentShader();
-    shaderProgram = createShaderProgram(vertexShader, fragmentShader);
-  }
-
-  unsigned int Renderer::createVertexShader()
-  {
-    unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-    checkShaderCompileErrors(vertexShader);
-    return vertexShader;
-  }
-
-  unsigned int Renderer::createFragmentShader()
-  {
-    unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-    checkShaderCompileErrors(fragmentShader);
-    return fragmentShader;
-  }
-
-  unsigned int Renderer::createShaderProgram(
-      unsigned int vertexShader, unsigned int fragmentShader)
-  {
-    unsigned int shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    checkProgramLinkErrors(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    return shaderProgram;
   }
 
   // use this method for testing

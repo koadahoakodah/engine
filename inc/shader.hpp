@@ -7,14 +7,16 @@ namespace kodah
    public:
 
     Shader(const char *vertexPath, const char *fragmentPath);
+    ~Shader();
 
-    void use();
+    void use() const;
 
-    unsigned int getId();
+    unsigned int getId() const;
 
     void setUniform(const char *name, bool value) const;
     void setUniform(const char *name, int value) const;
     void setUniform(const char *name, float value) const;
+    void setUniform(const char *name, float x, float y, float z, float w) const;
 
    private:
 
