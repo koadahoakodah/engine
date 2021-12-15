@@ -7,20 +7,20 @@
 
 #include <vector>
 
-namespace kodah
-{
-  class Renderer
-  {
+namespace kodah {
+  class Renderer {
    public:
 
     explicit Renderer(Window *window);
+
     ~Renderer();
 
     void render() const;
 
     void addTriangle(
-        glm::vec3 v1, glm::vec3 v2, glm::vec3 v3,
-        glm::vec3 c1, glm::vec3 c2, glm::vec3 c3);
+      glm::vec3 v1, glm::vec3 v2, glm::vec3 v3,
+      glm::vec3 c1, glm::vec3 c2, glm::vec3 c3
+    );
 
     void addShader(const char *vertexPath, const char *fragmentPath);
 
@@ -40,6 +40,7 @@ namespace kodah
     unsigned int ebo = 0;
 
     void addVertex(glm::vec3 vertex, glm::vec3 color);
+
     void updateVertices() const;
 
   };
