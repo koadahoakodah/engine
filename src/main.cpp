@@ -41,5 +41,13 @@ void run(int argc, char *argv[]) {
     glm::vec3(0.0f, 0.0f, 1.0f)
   );
 
+  // TEXTURES
+  float texCoords[] = {
+    0.0f, 0.0f, // lower-left corner
+    1.0f, 0.0f, // lower-right corner
+    0.5f, 1.0f, // top-center corner
+  };
+  glTexParameteri(
+
   engine.run();
 }

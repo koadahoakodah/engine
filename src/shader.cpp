@@ -84,6 +84,15 @@ namespace kodah {
 
       return shaderProgram;
     }
+
+    int getUniformLocation(unsigned int id, const char *name) {
+      int location = glGetUniformLocation(id, name);
+      if (location == -1) {
+        throw std::runtime_error(fmt::format("Could not find shader uniform location for name: \"{}\"", name));
+      }
+
+      return location;
+    }
   }
 
   Shader::Shader(const char *vertexPath, const char *fragmentPath) {
@@ -107,19 +116,18 @@ namespace kodah {
   }
 
   void Shader::setUniform(const char *name, bool value) const {
-    glUniform1i(glGetUniformLocation(id, name), (int) value);
+    glUniform1i(getUniformLocation(id, name), (int) value);
   }
 
   void Shader::setUniform(const char *name, int value) const {
-    glUniform1i(glGetUniformLocation(id, name), value);
+    glUniform1i(getUniformLocation(id, name), value);
   }
 
   void Shader::setUniform(const char *name, float value) const {
-    glUniform1f(glGetUniformLocation(id, name), value);
+    glUniform1f(getUniformLocation(id, name), value);
   }
 
   void Shader::setUniform(const char *name, float x, float y, float z, float w) const {
-    glUniform4f(glGetUniformLocation(id, name), x, y, z, w);
+    glUniform4f(getUniformLocation(id, name), x, y, z, w);
   }
-
 }

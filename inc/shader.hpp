@@ -10,7 +10,7 @@ namespace kodah {
 
     void use() const;
 
-    unsigned int getId() const;
+    [[nodiscard]] unsigned int getId() const;
 
     void setUniform(const char *name, bool value) const;
 
