@@ -1,6 +1,6 @@
-# graphics engine
+# opengl c++ template
 
-**Currently in development**
+Use this as reference to set up opengl with C++ in the future
 
 Dependencies:
 - [SDL2](https://www.libsdl.org/download-2.0.php) (for creating a window)
